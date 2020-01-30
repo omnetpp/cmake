@@ -168,6 +168,6 @@ References
 
 ---
 
-<b id="f1">1</b>: You may exchange the paths as you wish, but make sure to update them later on too. [↩](#a1)
+<b id="f1">1</b>: You could also just download the files and put them where you'd like, or if you want to help contribute, *fork it* and add that repository as a submodule! [↩](#a1)
 
 <b id="f2">2</b>: You may exchange the paths as you wish, but make sure to update them later on too. [↩](#a2)
