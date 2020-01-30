@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.0)
+
 find_package(PythonInterp 3 REQUIRED)
 
 macro(import_opp_target _target _opp_makefile)

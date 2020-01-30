@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.1)
+
 function(get_ned_folders _target _output)
     set(_folders "")
     get_target_property(_target_type ${_target} TYPE)

@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.0)
+
 macro(add_opp_build_target _name)
     string(TOLOWER "${_name}" _lower_name)
     set(_build_target "build_${_lower_name}")
