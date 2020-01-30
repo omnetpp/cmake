@@ -24,7 +24,7 @@ target_compile_definitions(opp_interface INTERFACE ${_compile_definitions})
 target_include_directories(opp_interface INTERFACE ${OMNETPP_INCLUDE_DIR})
 
 # create imported library targets
-set(_libraries cmdenv common envir eventlog layout main nedxml scave sim tkenv)
+set(_libraries cmdenv common envir eventlog layout main nedxml scave sim qtenv qtenv-osg)
 foreach(_library IN LISTS _libraries)
     string(TOUPPER ${_library} _LIBRARY)
     find_library(OMNETPP_${_LIBRARY}_LIBRARY_RELEASE opp${_library} PATHS ${OMNETPP_ROOT}/lib)
