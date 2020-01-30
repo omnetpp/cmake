@@ -1,11 +1,13 @@
-`omnetpp-cmake` --- CMake Modules for OMNet++ Projects
-======================================================
+`omnetpp-cmake` — CMake + OMNet++ = ❤
+======================================
 
-*This repository is a work-in-progress, and may never be fully be realised. It is substantially more likely that your use-case will not work out of the box, nor even after fiddling with the box. However, please do fiddle, and please help improve this.*
+*This repository is a work-in-progress, and may never be fully be realised. It is substantially more likely that your use-case will not work out of the box, nor even after fiddling with the box. However, please do fiddle, and please help me improve it.*
 
-Versions of OMNet++ developed against: initially 5.X. 
+CMake Modules for building OMNet++ projects and integrating with you CMake supporting editor.
 
-Current version "works" with OMNet++ 6.0pre6 and possibly the full release too.
+These CMake modules were originally develeoped against **OMNet+ 5.X**, but should also work with **OMNet++ 6.0** and beyond.
+
+Please help me make this better!
 
 Usage
 -----
@@ -132,7 +134,7 @@ Some benefits include:
 *My* motivation for forking this into a dedicated repository is primarily:
 
 * Limit my build approach to one interface rather than the default two with OMNet++
-* Allow me to integrate it with ease into other editors than Eclipse
+* Allow me to integrate it with ease into other editors than Eclipse such as JetBrains CLion
 * Try to make it work for OMNet++ 6.0 preview release
 
 Caveats
