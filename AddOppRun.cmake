@@ -59,7 +59,7 @@ function(_opp_run_command _target _output)
 endfunction()
 
 macro(add_opp_run _name)
-    set(_one_value_args "CONFIG;DEPENDENCY;WORKING_DIRECTORY")
+    set(_one_value_args "CONFIG;WORKING_DIRECTORY;DEPENDENCY")
     set(_multi_value_args "NED_FOLDERS")
     cmake_parse_arguments(_add_opp_run "" "${_one_value_args}" "${_multi_value_args}" ${ARGN})
 
@@ -76,7 +76,7 @@ macro(add_opp_run _name)
     if(_add_opp_run_DEPENDENCY)
         set(_target "${_add_opp_run_DEPENDENCY}")
     else()
-        set(_target "artery")
+        message(SEND_ERROR "add_opp_run called without specifying DEPENDENCY")
     endif()
 
     if(_add_opp_run_WORKING_DIRECTORY)
