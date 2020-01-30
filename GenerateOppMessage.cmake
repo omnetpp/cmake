@@ -1,35 +1,36 @@
+cmake_minimum_required(VERSION 3.1)
+
 include(CMakeParseArguments)
 
 # generate sources for messages via opp_msgc
 macro(generate_opp_message _msg_input)
-    cmake_parse_arguments(_gen_opp_msg "" "TARGET;DIRECTORY" "" ${ARGN})
+    cmake_parse_arguments(_gen_opp_msg "" "TARGET" "" ${ARGN})
     if(_gen_opp_msg_UNPARSED_ARGUMENTS)
         message(SEND_ERROR "generate_opp_message called with invalid arguments: ${_gen_opp_msg_UNPARSED_ARGUMENTS}")
     endif()
 
-    set(_msg_output_root ${PROJECT_BINARY_DIR}/opp_messages)
     get_filename_component(_msg_name "${_msg_input}" NAME_WE)
     get_filename_component(_msg_dir "${_msg_input}" DIRECTORY)
-    if(_gen_opp_msg_DIRECTORY)
-        set(_msg_prefix "${_gen_opp_msg_DIRECTORY}")
-    else()
-        file(RELATIVE_PATH _msg_prefix ${PROJECT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_dir})
-    endif()
+    # From OMNet+ 6 opp_msgc is replaced by opp_msgtool
+    # The tool uses the same syntax, but only outputs files in their source directory
+    set(_msg_output_root ${PROJECT_SOURCE_DIR})
+    # Gather the relative path from the source directory to the message input
+    file(RELATIVE_PATH _msg_prefix ${_msg_output_root} ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_dir})
+
     set(_msg_output_directory "${_msg_output_root}/${_msg_prefix}")
     set(_msg_output_source "${_msg_output_directory}/${_msg_name}_m.cc")
     set(_msg_output_header "${_msg_output_directory}/${_msg_name}_m.h")
 
-    add_custom_command(OUTPUT ${_msg_output_directory}
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${_msg_output_directory}"
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR} VERBATIM)
     add_custom_command(OUTPUT "${_msg_output_source}" "${_msg_output_header}"
-        COMMAND ${OMNETPP_MSGC} ARGS -s _m.cc -h ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_input}
-        DEPENDS ${_msg_input} ${OMNETPP_MSGC} ${_msg_output_directory}
+        COMMAND ${OMNETPP_MSGC}
+            ARGS -s _m.cc ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_input}
+        DEPENDS ${_msg_input} ${OMNETPP_MSGC}
         COMMENT "Generating ${_msg_prefix}/${_msg_name}"
-        WORKING_DIRECTORY ${_msg_output_directory} VERBATIM)
+        VERBATIM)
 
     target_sources(${_gen_opp_msg_TARGET} PRIVATE "${_msg_output_source}" "${_msg_output_header}")
-    target_include_directories(${_gen_opp_msg_TARGET} PUBLIC ${_msg_output_root})
+    target_include_directories(${_gen_opp_msg_TARGET} PUBLIC ${_msg_dir})
+    message("")
 endmacro()
 
 macro(clean_opp_messages)
