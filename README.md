@@ -66,8 +66,8 @@ The following is *one* of many other ways to do it.
         messages/a.msg
         messages/b.msg)
 
-    generate_opp_message(${MESSAGE_SOURCES}
-        TARGET project_library)
+    generate_opp_message(project_library
+        MESSAGE_FILES ${MESSAGE_SOURCES})
 
     # You will need to tweak and add the additional properties for your project
     set_target_properties(project_library PROPERTIES
@@ -86,7 +86,7 @@ The following is *one* of many other ways to do it.
 
 ### Macros Available
 
-- `generate_opp_message`(`<file1>` ... *`TARGET`* `<target1> ...`)  
+- `generate_opp_message`(`<target>` *`MESSAGE_FILES`* `<file1> ...`)  
   Generates and links a message file to a given target.
 
 - `import_opp_target`(`<opp_makemake_target>` `<Makefile>` [ `<cmake_target_file>` ])  
