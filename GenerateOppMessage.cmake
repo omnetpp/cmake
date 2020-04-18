@@ -14,21 +14,20 @@ macro(generate_opp_message _msg_target)
     endif()
 
     foreach(_msg_input IN ITEMS ${_gen_opp_msg_MESSAGE_FILES})
+        if(NOT IS_ABSOLUTE ${_msg_input})
+            set(_msg_input "${CMAKE_CURRENT_SOURCE_DIR}/${_msg_input}")
+        endif()
+
         get_filename_component(_msg_name "${_msg_input}" NAME_WE)
         get_filename_component(_msg_dir "${_msg_input}" DIRECTORY)
-        # From OMNet+ 6 opp_msgc is replaced by opp_msgtool
-        # The tool uses the same syntax, but only outputs files in their source directory
-        set(_msg_output_root ${PROJECT_SOURCE_DIR})
-        # Gather the relative path from the source directory to the message input
-        file(RELATIVE_PATH _msg_prefix ${_msg_output_root} ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_dir})
 
-        set(_msg_output_directory "${_msg_output_root}/${_msg_prefix}")
-        set(_msg_output_source "${_msg_output_directory}/${_msg_name}_m.cc")
-        set(_msg_output_header "${_msg_output_directory}/${_msg_name}_m.h")
+        # Path of sources and headers to be generated, respectively
+        set(_msg_output_source "${_msg_dir}/${_msg_name}_m.cc")
+        set(_msg_output_header "${_msg_dir}/${_msg_name}_m.h")
 
         add_custom_command(OUTPUT "${_msg_output_source}" "${_msg_output_header}"
             COMMAND ${OMNETPP_MSGC}
-            ARGS ${_msg_version_arg} -s _m.cc ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_input}
+            ARGS ${_msg_version_arg} -s _m.cc ${_msg_input}
             DEPENDS ${_msg_input} ${OMNETPP_MSGC}
             COMMENT "Generating ${_msg_prefix}/${_msg_name}"
             VERBATIM)
