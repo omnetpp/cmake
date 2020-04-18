@@ -29,12 +29,10 @@ macro(generate_opp_message _msg_target)
             COMMAND ${OMNETPP_MSGC}
             ARGS ${_msg_version_arg} -s _m.cc ${_msg_input}
             DEPENDS ${_msg_input} ${OMNETPP_MSGC}
-            COMMENT "Generating ${_msg_prefix}/${_msg_name}"
+            COMMENT "Generating ${_msg_dir}/${_msg_name}_m.(cc|h)"
             VERBATIM)
 
-        target_sources(${_msg_target} PRIVATE "${_msg_output_source}" "${_msg_output_header}")
-        target_include_directories(${_msg_target} PUBLIC ${_msg_dir})
-        message("")
+        target_sources(${_msg_target} PRIVATE "${_msg_output_source}")
     endforeach()
 endmacro()
 
