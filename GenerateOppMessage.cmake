@@ -13,7 +13,7 @@ macro(generate_opp_message _msg_target)
         set(_msg_version_arg "--msg4")
     endif()
 
-    foreach(_msg_input IN ${_gen_opp_msg_MESSAGES_FILES})
+    foreach(_msg_input IN ITEMS ${_gen_opp_msg_MESSAGE_FILES})
         get_filename_component(_msg_name "${_msg_input}" NAME_WE)
         get_filename_component(_msg_dir "${_msg_input}" DIRECTORY)
         # From OMNet+ 6 opp_msgc is replaced by opp_msgtool
