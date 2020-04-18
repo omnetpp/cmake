@@ -4,9 +4,13 @@ include(CMakeParseArguments)
 
 # generate sources for messages via opp_msgc
 macro(generate_opp_message _msg_target)
-    cmake_parse_arguments(_gen_opp_msg "" "" "MESSAGE_FILES" ${ARGN})
-    if(_gen_opp_msg_UNPARSED_ARGUMENTS)
-        message(SEND_ERROR "generate_opp_message called with invalid arguments: ${_gen_opp_msg_UNPARSED_ARGUMENTS}")
+    cmake_parse_arguments(_gen_opp_msg "LEGACY" "" "MESSAGE_FILES" ${ARGN})
+    if(NOT DEFINED _gen_opp_msg_MESSAGE_FILES)
+        message(SEND_ERROR "generate_opp_message called without MESSAGE_FILES!")
+    endif()
+
+    if(_gen_opp_msg_LEGACY)
+        set(_msg_version_arg "--msg4")
     endif()
 
     foreach(_msg_input IN ${_gen_opp_msg_MESSAGES_FILES})
@@ -24,7 +28,7 @@ macro(generate_opp_message _msg_target)
 
         add_custom_command(OUTPUT "${_msg_output_source}" "${_msg_output_header}"
             COMMAND ${OMNETPP_MSGC}
-            ARGS -s _m.cc ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_input}
+            ARGS ${_msg_version_arg} -s _m.cc ${CMAKE_CURRENT_SOURCE_DIR}/${_msg_input}
             DEPENDS ${_msg_input} ${OMNETPP_MSGC}
             COMMENT "Generating ${_msg_prefix}/${_msg_name}"
             VERBATIM)
