@@ -151,9 +151,7 @@ However, there are also some minor oddities and questions, uncertainties and the
 Licensing
 ---------
 
-The original CMake modules are taken and modified from [the OMNet++ V2X simulation framework in `riebl/artery`][artery], which is for the most part licensed as GPL-2.0. However, there are no license headings in the CMake modules whereas the source files *do*. Thus...
-
-- [ ] Clarify license of CMake modules from `riebl/artery`
+The CMake modules were based on those in [the OMNet++ V2X simulation framework in `riebl/artery`][artery], which is where undefined licensed as GPL-2.0.
 
 References
 ----------
