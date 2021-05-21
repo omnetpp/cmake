@@ -1,13 +1,12 @@
 `omnetpp-cmake` — CMake + OMNeT++ = ❤
 ======================================
 
-*This repository is a work-in-progress, and may never be fully be realised. It is substantially more likely that your use-case will not work out of the box, nor even after fiddling with the box. However, please do fiddle, and please help me improve it.*
+*This repository is a community-supported work-in-progress, and may never be fully completed.
+Please help us and others like you by contributing. Thanks!*
 
 CMake Modules for building OMNeT++ projects and integrating with you CMake supporting editor.
 
-These CMake modules were originally develeoped against **OMNeT+ 5.X**, but should also work with **OMNeT++ 6.0** and beyond.
-
-Please help me make this better!
+These CMake modules were originally developed against **OMNeT+ 5.X**, but should also work with **OMNeT++ 6.0** and beyond.
 
 Usage
 -----
@@ -131,16 +130,16 @@ Some benefits include:
 - Solid dependency handling, both *internal* and *external*
 - More accessible syntax compared to Makefiles
 
-*My* motivation for forking this into a dedicated repository is primarily:
+@thor's motivation for forking this into a dedicated repository was primarily:
 
-* Limit my build approach to one interface rather than the default two with OMNet++
-* Allow me to integrate it with ease into other editors than Eclipse such as JetBrains CLion
-* Try to make it work for OMNeT++ 6.0 preview release
+* Limit the build approach to one interface rather than the default two with OMNet++
+* Allow easy integrate into other editors than Eclipse, such as JetBrains CLion or Visual Studio Code
+* Try to make it work for the OMNeT++ 6.0 preview release
 
 Caveats
 -------
 
-There have been some changes which I don't trust (namely all of my own changes).
+There have been some changes which might require fixes or future improvements.
 These are primarily changes to make the proof-of-concept employed in Artery also work with OMNet++ 6.0.
 However, there are also some minor oddities and questions, uncertainties and the likes of which.
 
@@ -151,7 +150,7 @@ However, there are also some minor oddities and questions, uncertainties and the
 Licensing
 ---------
 
-The CMake modules were based on those in [the OMNet++ V2X simulation framework in `riebl/artery`][artery], which is where undefined licensed as GPL-2.0.
+The CMake modules were based on those in [the OMNet++ V2X simulation framework in `riebl/artery`][artery], which is licensed as GPL-2.0.
 
 References
 ----------
@@ -166,6 +165,6 @@ References
 
 ---
 
-<b id="f1">1</b>: You could also just download the files and put them where you'd like, or if you want to help contribute, *fork it* and add that repository as a submodule! [↩](#a1)
+<b id="f1">1</b>: You could also just download the files and put them where you'd like, or if you want to contribute, *fork it* and add that repository as a submodule! [↩](#a1)
 
 <b id="f2">2</b>: You may exchange the paths as you wish, but make sure to update them later on too. [↩](#a2)
