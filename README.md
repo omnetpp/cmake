@@ -16,7 +16,7 @@ The following is *one* of many other ways to do it.
 1.	Add the repository as a *`git` submodule* to your repository in `cmake`.<sup id="a1">[1](#f1)</sup>
 
     ```sh
-    git submodule add https://github.com/thor/omnetpp-cmake.git cmake
+    git submodule add https://github.com/omnetpp/cmake.git cmake
     ```
 
     ⚠ **Note:** If you have other CMake modules it is recommended that you replace `cmake` with `cmake/omnet` and so forth here and in the following steps.
