@@ -1,7 +1,7 @@
 find_path(OMNETPP_ROOT NAMES bin/omnetpp PATHS ENV PATH PATH_SUFFIXES .. DOC "Path to OMNeT++ root directory")
 find_path(OMNETPP_INCLUDE_DIR NAMES omnetpp.h PATHS ${OMNETPP_ROOT}/include DOC "OMNeT++ include directory")
 find_program(OMNETPP_MSGC NAMES opp_msgtool PATHS ${OMNETPP_ROOT}/bin DOC "OMNeT++ message compiler")
-find_program(OMNETPP_FEATURETOOL NAMES opp_featuretool PATHS ${OMNETPP_ROOT}/bin DOC "OMNeT++ Featuretool")
+find_program(OMNETPP_FEATURETOOL NAMES opp_featuretool PATHS ${OMNETPP_ROOT}/bin DOC "OMNeT++ feature tool")
 find_program(OMNETPP_RUN NAMES opp_run_release opp_run PATHS ${OMNETPP_ROOT}/bin DOC "OMNeT++ opp_run executable")
 find_program(OMNETPP_RUNALL NAMES opp_runall PATHS ${OMNETPP_ROOT}/bin DOC "OMNeT++ opp_runall script")
 find_program(OMNETPP_RUN_DEBUG NAMES opp_run_dbg opp_run PATHS ${OMNETPP_ROOT}/bin DOC "OMNeT++ opp_run_dbg executable")
