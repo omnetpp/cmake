@@ -47,13 +47,13 @@ function(generate_opp_message msg_input)
     set(msg_output_header "${msg_output_dir}/${msg_name}_m.h")
 
     # Prepare arguments for command
-    list(APPEND _args "-s" "_m.cc" "-I" ${msg_dir})
+    list(APPEND _args "-s" "_m.cc")
 
     foreach(include_dir IN LISTS args_ADDITIONAL_NED_PATHS)
         list(APPEND _args "-I" ${include_dir})
     endforeach()
 
-    # handle Message-Version
+    # Handle message version
     if(args_MSG4)
         list(APPEND _args "--msg4")
     endif()
@@ -61,24 +61,24 @@ function(generate_opp_message msg_input)
     # Create the output directory
     file(MAKE_DIRECTORY ${msg_output_dir})
 
-    # Copy the msg file to the output-directory (since the -h otion is gone in version 6)
-    set(msg_input_process "${msg_output_root}/${msg_prefix}/${msg_full_name}")
+    # Copy the msg file to the output directory (since the -h otion is gone in version 6)
+    set(msg_input_process "${msg_output_dir}/${msg_full_name}")
 
     add_custom_command(OUTPUT ${msg_input_process}
-        COMMAND ${CMAKE_COMMAND} -E copy 
-        ${msg_input}
-        ${msg_input_process}
-        COMMENT "Copying ${msg_full_name} to output directory."
+        COMMAND ${CMAKE_COMMAND} -E copy ${msg_input} ${msg_input_process}
+        COMMENT "Copying ${msg_full_name} to output directory"
+        DEPENDS ${msg_input}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        VERBATIM
     )
-
     list(APPEND _args ${msg_input_process})
-    
+
     add_custom_command(OUTPUT "${msg_output_source}" "${msg_output_header}"
         COMMAND ${OMNETPP_MSGC} ARGS ${_args}
-        DEPENDS ${msg_input} ${OMNETPP_MSGC}
-        COMMENT "Generating ${msg_prefix}/${msg_name}"
-        DEPENDS ${msg_input_process}
         COMMAND_EXPAND_LISTS
+        COMMENT "Generating ${msg_prefix}/${msg_name}"
+        DEPENDS ${OMNETPP_MSGC} ${msg_input_process}
+        WORKING_DIRECTORY ${msg_output_dir}
         VERBATIM
     )
 
