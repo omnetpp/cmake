@@ -4,9 +4,10 @@ if(NOT EXISTS ${OMNETPP_MSGC})
 endif()
 
 function(add_opp_target)
+    set(options_args MSG4)
     set(single_args ROOT_DIR SOURCE_DIR TARGET)
     set(multi_args DEPENDS OPP_MAKEMAKE)
-    cmake_parse_arguments(args "" "${single_args}" "${multi_args}" ${ARGN})
+    cmake_parse_arguments(args "${options_args}" "${single_args}" "${multi_args}" ${ARGN})
 
     if(NOT args_SOURCE_DIR)
         set(args_SOURCE_DIR ${args_ROOT_DIR}/src)
@@ -52,15 +53,17 @@ function(add_opp_target)
         get_filename_component(msg_name "${msg_file}" NAME_WE)
         get_filename_component(msg_dir "${msg_file}" DIRECTORY)
         file(RELATIVE_PATH msg_prefix ${args_SOURCE_DIR} ${msg_dir})
-        set(msg_out_dir ${msg_gen_dir}/${msg_prefix})
-        file(MAKE_DIRECTORY ${msg_out_dir})
-        add_custom_command(OUTPUT "${msg_out_dir}/${msg_name}_m.cc" "${msg_out_dir}/${msg_name}_m.h"
-            COMMAND ${OMNETPP_MSGC} ARGS -s _m.cc -h ${msg_file}
-            DEPENDS ${msg_file} ${OMNETPP_MSGC}
-            COMMENT "Generating message ${msg_prefix}/${msg_name} of ${args_TARGET}"
-            WORKING_DIRECTORY ${msg_out_dir} VERBATIM)
 
-        list(APPEND cpp_files "${msg_out_dir}/${msg_name}_m.cc" "${msg_out_dir}/${msg_name}_m.h")
+        generate_opp_message(
+            ${msg_file}
+            OUTPUT_ROOT             ${msg_gen_dir}
+            DIRECTORY               ${msg_prefix}
+            SRCS                    _cpp_files
+            ADDITIONAL_NED_PATHS    ${args_SOURCE_DIR}
+            MSG4
+        )
+
+        list(APPEND cpp_files ${_cpp_files})
     endforeach()
 
     # set up target for OMNeT++ project
