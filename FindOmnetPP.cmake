@@ -10,8 +10,9 @@ mark_as_advanced(OMNETPP_INCLUDE_DIR OMNETPP_MSGC OMNETPP_ROOT OMNETPP_RUN OMNET
 if(EXISTS ${OMNETPP_ROOT}/Makefile.inc)
     # extract version from Makefile.inc
     file(STRINGS ${OMNETPP_ROOT}/Makefile.inc _inc_version REGEX "^OMNETPP_VERSION =")
-    string(REGEX MATCH "([0-9.]+)$" _match_version "${_inc_version}")
+    string(REGEX MATCH "(([0-9])[0-9.]+(pre)?[0-9.]+)$" _match_version "${_inc_version}")
     set(OMNETPP_VERSION ${CMAKE_MATCH_1})
+    set(OMNETPP_VERSION_MAJOR ${CMAKE_MATCH_2})
 
     # extract compile definitions from Makefile.inc
     file(STRINGS ${OMNETPP_ROOT}/Makefile.inc _cflags_release REGEX "^CFLAGS_RELEASE =")
