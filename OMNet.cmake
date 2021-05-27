@@ -2,5 +2,5 @@
 include(ImportOppTarget)
 include(GenerateOppMessage)
 include(GetNedFolders)
-include(AddOppBuildTarget)
+include(AddOppTarget)
 include(AddOppRun)

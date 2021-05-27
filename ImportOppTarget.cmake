@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.0)
-
 find_package(PythonInterp 3 REQUIRED)
 
 macro(import_opp_target _target _opp_makefile)
@@ -17,7 +15,7 @@ macro(import_opp_target _target _opp_makefile)
 
     # generate target file (prior to build system generation)
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_MODULE_PATH}/opp_cmake.py ${_opp_makefile} ${_cmake_target}
+        COMMAND ${PYTHON_EXECUTABLE} opp_cmake.py ${_opp_makefile} ${_cmake_target}
         ERROR_VARIABLE _opp_cmake_error
         RESULT_VARIABLE _opp_cmake_result
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
