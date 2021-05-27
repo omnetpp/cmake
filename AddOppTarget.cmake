@@ -55,24 +55,19 @@ function(add_opp_target)
         get_filename_component(msg_dir "${msg_file}" DIRECTORY)
         file(RELATIVE_PATH msg_prefix ${args_SOURCE_DIR} ${msg_dir})
 
+        set(gen_opp_msg_opt_args "")
         if(args_MSG4)
-            generate_opp_message(
-                ${msg_file}
-                OUTPUT_ROOT             ${msg_gen_dir}
-                DIRECTORY               ${msg_prefix}
-                SRCS                    _cpp_files
-                ADDITIONAL_NED_PATHS    ${args_SOURCE_DIR}
-                MSG4
-            )
-        else()
-            generate_opp_message(
-                ${msg_file}
-                OUTPUT_ROOT             ${msg_gen_dir}
-                DIRECTORY               ${msg_prefix}
-                SRCS                    _cpp_files
-                ADDITIONAL_NED_PATHS    ${args_SOURCE_DIR}
-            )
+            list(APPEND gen_opp_msg_opt_args "MSG4")
         endif()
+
+        generate_opp_message(
+            ${msg_file}
+            OUTPUT_ROOT             ${msg_gen_dir}
+            DIRECTORY               ${msg_prefix}
+            SRCS                    _cpp_files
+            ADDITIONAL_NED_PATHS    ${args_SOURCE_DIR}
+            ${gen_opp_msg_opt_args}
+        )
 
         list(APPEND cpp_files ${_cpp_files})
     endforeach()
