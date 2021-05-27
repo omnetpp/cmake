@@ -56,8 +56,6 @@ function(generate_opp_message msg_input)
     # handle Message-Version
     if(args_MSG4)
         list(APPEND _args "--msg4")
-    else()
-        list(APPEND _args "--msg6")
     endif()
 
     # Create the output directory
