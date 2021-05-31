@@ -64,7 +64,7 @@ function(add_opp_target)
             ${msg_file}
             OUTPUT_ROOT             ${msg_gen_dir}
             DIRECTORY               ${msg_prefix}
-            SRCS                    _cpp_files
+            GEN_SOURCES             _cpp_files
             ADDITIONAL_NED_PATHS    ${args_SOURCE_DIR}
             ${gen_opp_msg_opt_args}
         )

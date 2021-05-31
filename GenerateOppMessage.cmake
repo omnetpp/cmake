@@ -8,8 +8,8 @@ include(CMakeParseArguments)
 # - OUTPUT_ROOT: Optional root-directory where the files will be generated. Default: ${PROJECT_BINARY_DIR}/opp_messages
 # - DIRECTORY: Optional relative path for the output-directory (Appended to OUTPUT_ROOT). 
 #   Defaults to the relative path of the message file in respect to ${PROJECT_SOURCE_DIR}/src
-# - SRCS: Optional name of the variable to populate with sources to be compiled
-# - INCLUDE_DIR: Optional name of the variable to populate with the include directory
+# - GEN_SOURCES: Optional name of the variable to populate with sources to be compiled
+# - GEN_INCLUDE_DIR: Optional name of the variable to populate with the include directory
 #
 # Mutli Value Arguments:
 # - ADDITIONAL_NED_PATHS: Optional paths to be added as search/include directories when calling the message compiler (-I Arguments)
@@ -17,7 +17,7 @@ include(CMakeParseArguments)
 # generate sources for messages via opp_msgc
 function(generate_opp_message msg_input)
     set(options MSG4)
-    set(oneValueArgs TARGET DIRECTORY OUTPUT_ROOT SRCS INCLUDE_DIR)
+    set(oneValueArgs TARGET DIRECTORY OUTPUT_ROOT GEN_SOURCES GEN_INCLUDE_DIR)
     set(multiValueArgs ADDITIONAL_NED_PATHS)
 
     cmake_parse_arguments(args "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -87,11 +87,11 @@ function(generate_opp_message msg_input)
         target_include_directories(${args_TARGET} PUBLIC ${msg_output_root})
     endif()
 
-    if(args_SRCS)
-        set(${args_SRCS} "${msg_output_source}" "${msg_output_header}" PARENT_SCOPE)
+    if(args_GEN_SOURCES)
+        set(${args_GEN_SOURCES} "${msg_output_source}" "${msg_output_header}" PARENT_SCOPE)
     endif()
 
-    if(args_INCLUDE_DIR)
-        set(${args_INCLUDE_DIR} ${msg_output_root} PARENT_SCOPE)
+    if(args_GEN_INCLUDE_DIR)
+        set(${args_GEN_INCLUDE_DIR} ${msg_output_root} PARENT_SCOPE)
     endif()
 endfunction()
