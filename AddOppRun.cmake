@@ -26,6 +26,7 @@ function(_get_opp_run_dependencies target output)
         endif()
     endforeach()
 
+    list(REMOVE_DUPLICATES dependencies)
     set(${output} ${dependencies} PARENT_SCOPE)
 endfunction()
 
@@ -45,10 +46,11 @@ function(_build_opp_run_command)
     get_ned_folders(${args_TARGET} target_ned_folders)
     set(ned_folders "")
     foreach(ned_folder IN LISTS target_ned_folders args_NED_FOLDERS)
-        set(ned_folders "${ned_folders}:${ned_folder}")
+        set(ned_folders "${ned_folders};${ned_folder}")
     endforeach()
     if(ned_folders)
-        string(SUBSTRING ${ned_folders} 1 -1 ned_folders)
+        string(SUBSTRING "${ned_folders}" 1 -1 ned_folders)
+        string(REPLACE ";" "$<SEMICOLON>" ned_folders "${ned_folders}")
     endif()
 
     # select opp_run binary depending on build type
@@ -61,12 +63,15 @@ function(_build_opp_run_command)
     # build opp_run command depending on target type
     get_target_property(target_type ${args_TARGET} TYPE)
     if(${target_type} STREQUAL "EXECUTABLE")
-        set(exec $<TARGET_FILE:${args_TARGET}> -n ${ned_folders})
+        set(exec $<TARGET_FILE:${args_TARGET}> -n "${ned_folders}")
     elseif(${target_type} STREQUAL "SHARED_LIBRARY")
-        set(exec ${opp_run} -n ${ned_folders} -l $<TARGET_FILE:${args_TARGET}>)
+        # if the target is depending on libraries like INET, 
+        # add them before the actual target so that they get loaded first by opp_run
+        _get_opp_run_libraries(${args_TARGET} opp_libraries)
+        set(exec ${opp_run} -n "${ned_folders}" ${opp_libraries} -l $<TARGET_FILE:${args_TARGET}>)
     else()
         _get_opp_run_libraries(${args_TARGET} opp_libraries)
-        set(exec ${opp_run} -n ${ned_folders} ${opp_libraries})
+        set(exec ${opp_run} -n "${ned_folders}" ${opp_libraries})
     endif()
 
     set(${args_OUTPUT} ${exec} PARENT_SCOPE)
