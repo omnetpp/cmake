@@ -16,11 +16,11 @@ include(CMakeParseArguments)
 
 # generate sources for messages via opp_msgc
 function(generate_opp_message msg_input)
-    set(options MSG4)
-    set(oneValueArgs TARGET DIRECTORY OUTPUT_ROOT GEN_SOURCES GEN_INCLUDE_DIR)
-    set(multiValueArgs ADDITIONAL_NED_PATHS)
+    set(options_args MSG4)
+    set(single_args TARGET DIRECTORY OUTPUT_ROOT GEN_SOURCES GEN_INCLUDE_DIR)
+    set(multi_args ADDITIONAL_NED_PATHS)
 
-    cmake_parse_arguments(args "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(args "${options_args}" "${single_args}" "${multi_args}" ${ARGN})
 
     if(args_UNPARSED_ARGUMENTS)
         message(SEND_ERROR "generate_opp_message called with invalid arguments: ${args_UNPARSED_ARGUMENTS}")
