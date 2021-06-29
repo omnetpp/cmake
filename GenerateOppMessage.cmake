@@ -59,7 +59,7 @@ function(generate_opp_message msg_input)
     endif()
 
     # Handle DLL-Export
-    if(WIN32 OR MSVC AND ${OMNETPP_VERSION} VERSION_GREATER_EQUAL 6)
+    if(WIN32 OR MSVC)
         if(args_DLL_SYMBOL)
             list(APPEND _args "-P ${args_DLL_SYMBOL}")
         endif()
