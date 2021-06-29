@@ -48,6 +48,11 @@ function(add_opp_target)
         endif()
     endif()
 
+    # On Windows, if no DLL-Symbol is given, handle default
+    if(WIN32 OR MSVC AND NOT args_DLL_SYMBOL)
+        set(args_DLL_SYMBOL "${args_TARGET}_API")
+    endif()
+
     # generate OMNeT++ message code in build directory
     set(msg_gen_dir ${PROJECT_BINARY_DIR}/${args_TARGET}_gen)
     foreach(msg_file IN LISTS msg_files)
