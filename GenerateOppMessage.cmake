@@ -17,7 +17,7 @@ include(CMakeParseArguments)
 # generate sources for messages via opp_msgc
 function(generate_opp_message msg_input)
     set(options_args MSG4)
-    set(single_args TARGET DIRECTORY OUTPUT_ROOT GEN_SOURCES GEN_INCLUDE_DIR)
+    set(single_args TARGET DIRECTORY OUTPUT_ROOT GEN_SOURCES GEN_INCLUDE_DIR DLL_SYMBOL)
     set(multi_args ADDITIONAL_NED_PATHS)
 
     cmake_parse_arguments(args "${options_args}" "${single_args}" "${multi_args}" ${ARGN})
@@ -56,6 +56,13 @@ function(generate_opp_message msg_input)
     # Handle message version
     if(args_MSG4)
         list(APPEND _args "--msg4")
+    endif()
+
+    # Handle DLL-Export
+    if(WIN32 OR MSVC)
+        if(args_DLL_SYMBOL)
+            list(APPEND _args "-P ${args_DLL_SYMBOL}")
+        endif()
     endif()
 
     # Create the output directory

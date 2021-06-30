@@ -5,7 +5,7 @@ endif()
 
 function(add_opp_target)
     set(options_args MSG4)
-    set(single_args ROOT_DIR SOURCE_DIR TARGET)
+    set(single_args ROOT_DIR SOURCE_DIR TARGET DLL_SYMBOL)
     set(multi_args DEPENDS OPP_MAKEMAKE)
     cmake_parse_arguments(args "${options_args}" "${single_args}" "${multi_args}" ${ARGN})
 
@@ -48,6 +48,11 @@ function(add_opp_target)
         endif()
     endif()
 
+    # On Windows, if no DLL-Symbol is given, handle default
+    if(WIN32 OR MSVC AND NOT args_DLL_SYMBOL)
+        set(args_DLL_SYMBOL "${args_TARGET}_API")
+    endif()
+
     # generate OMNeT++ message code in build directory
     set(msg_gen_dir ${PROJECT_BINARY_DIR}/${args_TARGET}_gen)
     foreach(msg_file IN LISTS msg_files)
@@ -66,6 +71,7 @@ function(add_opp_target)
             DIRECTORY               ${msg_prefix}
             GEN_SOURCES             _cpp_files
             ADDITIONAL_NED_PATHS    ${args_SOURCE_DIR}
+            DLL_SYMBOL              ${args_DLL_SYMBOL}
             ${gen_opp_msg_opt_args}
         )
 
