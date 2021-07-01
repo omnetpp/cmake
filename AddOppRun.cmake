@@ -1,3 +1,4 @@
+find_package(PythonInterp 3 REQUIRED)
 include(CMakeParseArguments)
 include(GetNedFolders)
 set(_OPP_CMAKE_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
@@ -7,6 +8,8 @@ find_program(VALGRIND_COMMAND valgrind DOC "Valgrind executable")
 set(VALGRIND_FLAGS "--track-origins=yes" CACHE STRING "Flags passed to Valgrind for memcheck targets")
 set(VALGRIND_EXEC_FLAGS "-u Cmdenv" CACHE STRING "Flags passed to executable run by Valgrind")
 set(RUN_FLAGS "" CACHE STRING "Flags appended to run command (and debug)")
+set(VSCODE_DEBUG_CONFIG "GDB" CACHE STRING "Set either to GDB or CodeLLDB to export launch-settings (install CodeLLDB extension).")
+set(THIS_MODULE_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 mark_as_advanced(GDB_COMMAND VALGRIND_COMMAND)
 
 function(_get_opp_run_dependencies target output)
@@ -79,9 +82,10 @@ function(_build_opp_run_command)
 endfunction()
 
 function(add_opp_run name)
+    set(options_args VSCODE)
     set(one_value_args "CONFIG;DEPENDENCY;WORKING_DIRECTORY")
     set(multi_value_args "NED_FOLDERS")
-    cmake_parse_arguments(args "" "${one_value_args}" "${multi_value_args}" ${ARGN})
+    cmake_parse_arguments(args "${options_args}" "${one_value_args}" "${multi_value_args}" ${ARGN})
 
     if(args_UNPARSED_ARGUMENTS)
         message(SEND_ERROR "add_opp_run called with invalid arguments: ${args_UNPARSED_ARGUMENTS}")
@@ -124,6 +128,23 @@ function(add_opp_run name)
             COMMAND ${GDB_COMMAND} --args ${exec} ${config} ${run_flags}
             WORKING_DIRECTORY ${working_directory}
             VERBATIM)
+    endif()
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND args_VSCODE)
+        # Generate debug-configuration in launch.json
+        # Adds file-level dependency to omnetpp-debug-setup-commands.json to rerun python script if setup-commands are changed
+        add_custom_command(
+            TARGET  ${name} POST_BUILD
+            COMMAND ${Python_EXECUTABLE} ${THIS_MODULE_BASE_DIR}/opp_vscode_debug_config.py 
+                    ${VSCODE_DEBUG_CONFIG}
+                    ${name} 
+                    ${PROJECT_SOURCE_DIR} 
+                    ${OMNETPP_ROOT}
+                    ${GDB_COMMAND}
+                    ${exec} 
+                    ${config} ${run_flags}
+            DEPENDS ${PROJECT_SOURCE_DIR}/.vscode/omnetpp-debug-setup-commands.json
+        )
     endif()
 
     if(VALGRIND_COMMAND)
