@@ -135,7 +135,7 @@ function(add_opp_run name)
         # Adds file-level dependency to omnetpp-debug-setup-commands.json to rerun python script if setup-commands are changed
         add_custom_command(
             TARGET  ${name} POST_BUILD
-            COMMAND ${Python_EXECUTABLE} ${THIS_MODULE_BASE_DIR}/opp_vscode_debug_config.py 
+            COMMAND ${PYTHON_EXECUTABLE} ${THIS_MODULE_BASE_DIR}/opp_vscode_debug_config.py
                     ${VSCODE_DEBUG_CONFIG}
                     ${name} 
                     ${PROJECT_SOURCE_DIR} 
