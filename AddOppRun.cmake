@@ -140,6 +140,7 @@ function(add_opp_run name)
                     ${name} 
                     ${PROJECT_SOURCE_DIR} 
                     ${OMNETPP_ROOT}
+                    ${working_directory}
                     ${GDB_COMMAND}
                     ${exec} 
                     ${config} ${run_flags}

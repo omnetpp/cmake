@@ -58,6 +58,7 @@ def main():
     parser.add_argument('root', type=str,
                         help='Workspace root-folder (containing .vscode folder).')
     parser.add_argument('omnetpp', type=str, help="OMNeT++ root folder.")
+    parser.add_argument('working_directory', type=str, help="working directory of debug target.")
     parser.add_argument('debugger', type=str,
                         help='Path to debugger.')
     parser.add_argument('rundbg', type=str,
@@ -100,8 +101,8 @@ def main():
 
     # Create the debug-config for the given target using launch.json model
     switcher = {
-        "GDB": GdbConfig(args.omnetpp, args.target, args.rundbg, launch_args, args.root, args.debugger, setup_commands),
-        "CodeLLDB": CodeLldbConfig(args.omnetpp, args.target, args.rundbg, launch_args, args.root, args.debugger, setup_commands)
+        "GDB": GdbConfig(args.omnetpp, args.target, args.rundbg, launch_args, args.working_directory, args.debugger, setup_commands),
+        "CodeLLDB": CodeLldbConfig(args.omnetpp, args.target, args.rundbg, launch_args, args.working_directory, args.debugger, setup_commands)
     }
 
     config = switcher[args.config]
