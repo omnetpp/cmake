@@ -137,12 +137,12 @@ function(add_opp_run name)
             TARGET  ${name} POST_BUILD
             COMMAND ${PYTHON_EXECUTABLE} ${THIS_MODULE_BASE_DIR}/opp_vscode_debug_config.py
                     ${VSCODE_DEBUG_CONFIG}
-                    ${name} 
-                    ${PROJECT_SOURCE_DIR} 
+                    ${name}
+                    ${PROJECT_SOURCE_DIR}
                     ${OMNETPP_ROOT}
                     ${working_directory}
                     ${GDB_COMMAND}
-                    ${exec} 
+                    ${exec}
                     ${config} ${run_flags}
             DEPENDS ${PROJECT_SOURCE_DIR}/.vscode/omnetpp-debug-setup-commands.json
             VERBATIM
