@@ -111,6 +111,10 @@ def main():
             f.seek(0)
             launch_settings = json.load(f)
 
+            # create empty configurations list if missing
+            if not 'configurations' in launch_settings:
+                launch_settings['configurations'] = []
+
             # Remove any existing config with same name
             for index, item in enumerate(launch_settings['configurations']):
                 if item['name'] == config.name:
