@@ -144,6 +144,7 @@ function(add_opp_run name)
                     ${exec} 
                     ${config} ${run_flags}
             DEPENDS ${PROJECT_SOURCE_DIR}/.vscode/omnetpp-debug-setup-commands.json
+            VERBATIM
         )
     endif()
 
