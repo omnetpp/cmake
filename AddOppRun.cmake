@@ -131,22 +131,30 @@ function(add_opp_run name)
     endif()
 
     if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND args_VSCODE)
-        # Generate debug-configuration in launch.json
-        # Adds file-level dependency to omnetpp-debug-setup-commands.json to rerun python script if setup-commands are changed
+        if(NOT TARGET update_launch_json)
+            add_custom_target(update_launch_json ALL DEPENDS update_launch_json.stamp)
+        endif()
+
         add_custom_command(
-            TARGET debug_${name} PRE_BUILD
-            COMMAND ${PYTHON_EXECUTABLE} ${THIS_MODULE_BASE_DIR}/opp_vscode_debug_config.py
-                    ${VSCODE_DEBUG_CONFIG}
-                    ${name}
-                    ${PROJECT_SOURCE_DIR}
-                    ${OMNETPP_ROOT}
-                    ${working_directory}
-                    ${GDB_COMMAND}
-                    ${exec}
-                    ${config} ${run_flags}
-            DEPENDS ${PROJECT_SOURCE_DIR}/.vscode/omnetpp-debug-setup-commands.json
-            VERBATIM
-        )
+            OUTPUT update_launch_json.stamp
+            COMMAND ${PYTHON_EXECUTABLE} ${THIS_MODULE_BASE_DIR}/update_launch_json.py
+                --gdb-command ${GDB_COMMAND}
+                --omnetpp-root ${OMNETPP_ROOT}
+                --debug-config ${VSCODE_DEBUG_CONFIG}
+                --setup-commands ${PROJECT_SOURCE_DIR}/.vscode/omnetpp-debug-setup-commands.json
+                ${PROJECT_SOURCE_DIR}/.vscode/launch.json
+            COMMAND ${CMAKE_COMMAND} -E touch update_launch_json.stamp
+            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+            COMMENT "Updating launch.json of VSCode"
+            VERBATIM)
+
+        list(GET exec 0 _launch_exec)
+        list(SUBLIST exec 1 -1 _launch_args)
+        list(APPEND _launch_args ${config} ${run_flags})
+        string(REPLACE ";" " " _launch_args "${_launch_args}")
+        file(GENERATE OUTPUT ${PROJECT_BINARY_DIR}/vscode-debug/${name}.json
+            CONTENT "{\"working_directory\": \"${working_directory}\", \"exec\": \"${_launch_exec}\", \"args\": \"${_launch_args}\"}"
+            CONDITION "$<CONFIG:Debug>")
     endif()
 
     if(VALGRIND_COMMAND)
