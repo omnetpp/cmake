@@ -1,5 +1,6 @@
 include(CMakeParseArguments)
 include(GetNedFolders)
+set(_OPP_CMAKE_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 find_program(GDB_COMMAND gdb DOC "GNU debugger")
 find_program(VALGRIND_COMMAND valgrind DOC "Valgrind executable")
@@ -178,7 +179,7 @@ endfunction(add_opp_test)
 
 function(generate_run_script)
     set(option_args "INSTALL")
-    set(one_value_args "TARGET;FILE")
+    set(one_value_args "TARGET;FILE;TEMPLATE")
     cmake_parse_arguments(args "${option_args}" "${one_value_args}" "" ${ARGN})
 
     if(args_UNPARSED_ARGUMENTS)
@@ -222,6 +223,10 @@ function(generate_run_script)
     set(opp_runall_script ${OMNETPP_RUNALL})
 
     # substitute variables first, then generator expressions
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/run_artery.sh.in ${args_FILE} @ONLY)
+    if(NOT args_TEMPLATE)
+        configure_file(${_OPP_CMAKE_BASE_DIR}/run_opp.sh.in ${args_FILE} @ONLY)
+    else()
+        configure_file(${args_TEMPLATE} ${args_FILE} @ONLY)
+    endif()
     file(GENERATE OUTPUT ${args_FILE} INPUT ${args_FILE})
 endfunction()
