@@ -103,19 +103,20 @@ The following is *one* of many other ways to do it.
 
 ### Interfaces and Library Targets Available
 
-- `opp_interface`
-
-- `opp_cmdenv`
-- `opp_common`
-- `opp_envir`
-- `opp_eventlog`
-- `opp_layout`
-- `opp_main`
-- `opp_nedxml`
-- `opp_scave`
-- `opp_sim`
-- `opp_qtenv`
-- `opp_qtenv-osg`
+`OmnetPP::header` is a bare interface target with at least the compile definitions and include directories set for the found OMNeT++ setup.
+Additionally, the following OMNeT++ libraries are provided as imported library targets:
+- `OmnetPP::cmdenv`
+- `OmnetPP::common`
+- `OmnetPP::envir`
+- `OmnetPP::eventlog`
+- `OmnetPP::layout`
+- `OmnetPP::main`
+- `OmnetPP::nedxml`
+- `OmnetPP::qtenv`
+- `OmnetPP::qtenv-osg`
+- `OmnetPP::scave`
+- `OmnetPP::sim`
+- `OmnetPP::tkenv`
 
 
 Motivation & Background
@@ -125,16 +126,12 @@ For the full motivation and background please [see Raphael Riebl's presentation 
 
 Some benefits include:
 
-* CMake's wide usage for C/C++ projects
+- CMake is widely used for C/C++ projects
 - Convenient user interfaces available for configuring builds
 - Solid dependency handling, both *internal* and *external*
 - More accessible syntax compared to Makefiles
-
-@thor's motivation for forking this into a dedicated repository was primarily:
-
-* Limit the build approach to one interface rather than the default two with OMNet++
-* Allow easy integrate into other editors than Eclipse, such as JetBrains CLion or Visual Studio Code
-* Try to make it work for the OMNeT++ 6.0 preview release
+- Several IDEs support the CMake build system
+- Support OMNeT++ 6.0 preview releases (by @thor)
 
 Caveats
 -------
@@ -145,6 +142,7 @@ However, there are also some minor oddities and questions, uncertainties and the
 
 - [ ] `opp_cmake.py` will not take a lot of automatic definitions into account when importing a project
 - [ ] `clean_opp_messages()` is unavailable as message files are no longer gathered in a single folder for buliding
+- [ ] include path needs to be adjusted manually if `#include "generated_m.h"` is used
 - [ ] `add_opp_run` doesn't seem to utilise the parameter `NED_FOLDERS`
 
 Licensing
