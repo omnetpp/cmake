@@ -1,47 +1,104 @@
-cmake_minimum_required(VERSION 3.1)
-
 include(CMakeParseArguments)
 
+# Options:
+# - MSG4: Call message compiler with --msg4
+# 
+# One Value Arguments:
+# - TARGET: Optional name of the target to call target_sources and target_include_directories to add compiled sources
+# - OUTPUT_ROOT: Optional root-directory where the files will be generated. Default: ${PROJECT_BINARY_DIR}/opp_messages
+# - DIRECTORY: Optional relative path for the output-directory (Appended to OUTPUT_ROOT). 
+#   Defaults to the relative path of the message file in respect to ${PROJECT_SOURCE_DIR}/src
+# - GEN_SOURCES: Optional name of the variable to populate with sources to be compiled
+# - GEN_INCLUDE_DIR: Optional name of the variable to populate with the include directory
+#
+# Mutli Value Arguments:
+# - ADDITIONAL_NED_PATHS: Optional paths to be added as search/include directories when calling the message compiler (-I Arguments)
+
 # generate sources for messages via opp_msgc
-macro(generate_opp_message _msg_target)
-    cmake_parse_arguments(_gen_opp_msg "LEGACY" "" "MESSAGE_FILES" ${ARGN})
-    if(NOT DEFINED _gen_opp_msg_MESSAGE_FILES)
-        message(SEND_ERROR "generate_opp_message called without MESSAGE_FILES!")
+function(generate_opp_message msg_input)
+    set(options_args MSG4)
+    set(single_args TARGET DIRECTORY OUTPUT_ROOT GEN_SOURCES GEN_INCLUDE_DIR DLL_SYMBOL)
+    set(multi_args ADDITIONAL_NED_PATHS)
+
+    cmake_parse_arguments(args "${options_args}" "${single_args}" "${multi_args}" ${ARGN})
+
+    if(args_UNPARSED_ARGUMENTS)
+        message(SEND_ERROR "generate_opp_message called with invalid arguments: ${args_UNPARSED_ARGUMENTS}")
     endif()
 
-    if(_gen_opp_msg_LEGACY)
-        set(_msg_version_arg "--msg4")
+    if(args_OUTPUT_ROOT)
+        set(msg_output_root ${args_OUTPUT_ROOT})
+    else()
+        set(msg_output_root ${PROJECT_BINARY_DIR}/opp_messages)
     endif()
 
-    foreach(_msg_input IN ITEMS ${_gen_opp_msg_MESSAGE_FILES})
-        if(NOT IS_ABSOLUTE ${_msg_input})
-            set(_msg_input "${CMAKE_CURRENT_SOURCE_DIR}/${_msg_input}")
-        endif()
+    get_filename_component(msg_full_name "${msg_input}" NAME)
+    get_filename_component(msg_name "${msg_input}" NAME_WE)
+    get_filename_component(msg_dir "${msg_input}" DIRECTORY)
 
-        get_filename_component(_msg_name "${_msg_input}" NAME_WE)
-        get_filename_component(_msg_dir "${_msg_input}" DIRECTORY)
+    if(args_DIRECTORY)
+        set(msg_prefix "${args_DIRECTORY}")
+    else()
+        file(RELATIVE_PATH msg_prefix ${PROJECT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/${msg_dir})
+    endif()
 
-        # Path of sources and headers to be generated, respectively
-        set(_msg_output_source "${_msg_dir}/${_msg_name}_m.cc")
-        set(_msg_output_header "${_msg_dir}/${_msg_name}_m.h")
+    set(msg_output_dir "${msg_output_root}/${msg_prefix}")
+    set(msg_output_source "${msg_output_dir}/${msg_name}_m.cc")
+    set(msg_output_header "${msg_output_dir}/${msg_name}_m.h")
 
-        add_custom_command(OUTPUT "${_msg_output_source}" "${_msg_output_header}"
-            COMMAND ${OMNETPP_MSGC}
-            ARGS ${_msg_version_arg} -s _m.cc ${_msg_input}
-            DEPENDS ${_msg_input} ${OMNETPP_MSGC}
-            COMMENT "Generating ${_msg_dir}/${_msg_name}_m.(cc|h)"
-            VERBATIM)
+    # Prepare arguments for command
+    list(APPEND _args "-s" "_m.cc")
 
-        target_sources(${_msg_target} PRIVATE "${_msg_output_source}")
+    foreach(include_dir IN LISTS args_ADDITIONAL_NED_PATHS)
+        list(APPEND _args "-I" ${include_dir})
     endforeach()
-endmacro()
 
-macro(clean_opp_messages)
-    execute_process(COMMAND "${OMNETPP_MSGC}" ERROR_VARIABLE _output OUTPUT_VARIABLE _output)
-    string(REGEX MATCH "Version: [0-9\.]+[a-z0-9]+, build: [^ ,]+" _opp_msgc_identifier "${_output}")
-    if (NOT "${_opp_msgc_identifier}" STREQUAL "${OMNETPP_MSGC_IDENTIFIER}")
-        file(REMOVE_RECURSE ${PROJECT_BINARY_DIR}/opp_messages)
+    # Handle message version
+    if(args_MSG4)
+        list(APPEND _args "--msg4")
     endif()
-    set(OMNETPP_MSGC_IDENTIFIER ${_opp_msgc_identifier} CACHE INTERNAL "identification of OMNeT++ message compiler" FORCE)
-endmacro()
-variable_watch(OMNETPP_MSGC clean_opp_messages)
+
+    # Handle DLL-Export
+    if(WIN32 OR MSVC)
+        if(args_DLL_SYMBOL)
+            list(APPEND _args "-P ${args_DLL_SYMBOL}")
+        endif()
+    endif()
+
+    # Create the output directory
+    file(MAKE_DIRECTORY ${msg_output_dir})
+
+    # Copy the msg file to the output directory (since the -h otion is gone in version 6)
+    set(msg_input_process "${msg_output_dir}/${msg_full_name}")
+
+    add_custom_command(OUTPUT ${msg_input_process}
+        COMMAND ${CMAKE_COMMAND} -E copy ${msg_input} ${msg_input_process}
+        COMMENT "Copying ${msg_full_name} to output directory"
+        DEPENDS ${msg_input}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        VERBATIM
+    )
+    list(APPEND _args ${msg_input_process})
+
+    add_custom_command(OUTPUT "${msg_output_source}" "${msg_output_header}"
+        COMMAND ${OMNETPP_MSGC} ARGS ${_args}
+        COMMAND_EXPAND_LISTS
+        COMMENT "Generating ${msg_prefix}/${msg_name}"
+        DEPENDS ${OMNETPP_MSGC} ${msg_input_process}
+        WORKING_DIRECTORY ${msg_output_dir}
+        VERBATIM
+    )
+
+    if (args_TARGET)
+        target_sources(${args_TARGET} PRIVATE "${msg_output_source}" "${msg_output_header}")
+        target_include_directories(${args_TARGET} PUBLIC ${msg_output_root})
+    endif()
+
+    if(args_GEN_SOURCES)
+        set(${args_GEN_SOURCES} "${msg_output_source}" "${msg_output_header}" PARENT_SCOPE)
+    endif()
+
+    if(args_GEN_INCLUDE_DIR)
+        set(${args_GEN_INCLUDE_DIR} ${msg_output_root} PARENT_SCOPE)
+    endif()
+endfunction()
