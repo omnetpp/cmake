@@ -1,0 +1,13 @@
+project(CheckHelpersTest)
+cmake_minimum_required(VERSION 3.13)
+include(${PROJECT_SOURCE_DIR}/../TestSuiteHelpers.cmake)
+set(CMAKE_MODULE_PATH ${OMNETPP_CMAKE_ROOT})
+
+include(OmnetppHelpers)
+expect_command(import_opp_target)
+expect_command(generate_opp_message)
+expect_command(get_ned_folders)
+expect_command(get_install_ned_folders)
+expect_command(add_opp_target)
+expect_command(add_opp_run)
+expect_command(add_opp_test)
