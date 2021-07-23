@@ -32,7 +32,7 @@ target_include_directories(opp_header INTERFACE ${OMNETPP_INCLUDE_DIR})
 add_library(OmnetPP::header ALIAS opp_header)
 
 # create imported library targets
-set(_libraries cmdenv common envir eventlog layout main nedxml scave sim tkenv)
+set(_libraries cmdenv common envir eventlog layout main nedxml qtenv qtenv-osg scave sim tkenv)
 foreach(_library IN LISTS _libraries)
     string(TOUPPER ${_library} _LIBRARY)
     find_library(OMNETPP_${_LIBRARY}_LIBRARY_RELEASE opp${_library} PATHS ${OMNETPP_ROOT}/lib)
