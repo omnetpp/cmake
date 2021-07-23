@@ -13,4 +13,5 @@ endmacro()
 
 add_opp_test_suite(find-omnetpp FindOMNeT++)
 add_opp_test_suite(omnetpp-helpers CheckHelpers)
+add_opp_test_suite(run-script RunScript)
 
