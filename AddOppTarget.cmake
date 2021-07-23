@@ -1,7 +1,4 @@
 include(CMakeParseArguments)
-if(NOT EXISTS ${OMNETPP_MSGC})
-    message(FATAL_ERROR "OMNeT++ message compiler is missing")
-endif()
 
 function(add_opp_target)
     set(options_args MSG4)

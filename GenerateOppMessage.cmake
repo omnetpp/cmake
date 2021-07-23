@@ -2,11 +2,11 @@ include(CMakeParseArguments)
 
 # Options:
 # - MSG4: Call message compiler with --msg4
-# 
+#
 # One Value Arguments:
 # - TARGET: Optional name of the target to call target_sources and target_include_directories to add compiled sources
 # - OUTPUT_ROOT: Optional root-directory where the files will be generated. Default: ${PROJECT_BINARY_DIR}/opp_messages
-# - DIRECTORY: Optional relative path for the output-directory (Appended to OUTPUT_ROOT). 
+# - DIRECTORY: Optional relative path for the output-directory (Appended to OUTPUT_ROOT).
 #   Defaults to the relative path of the message file in respect to ${PROJECT_SOURCE_DIR}/src
 # - GEN_SOURCES: Optional name of the variable to populate with sources to be compiled
 # - GEN_INCLUDE_DIR: Optional name of the variable to populate with the include directory
@@ -16,10 +16,13 @@ include(CMakeParseArguments)
 
 # generate sources for messages via opp_msgc
 function(generate_opp_message msg_input)
+    if(NOT EXISTS ${OMNETPP_MSGC})
+        message(FATAL_ERROR "OMNeT++ message compiler is missing")
+    endif()
+
     set(options_args MSG4)
     set(single_args TARGET DIRECTORY OUTPUT_ROOT GEN_SOURCES GEN_INCLUDE_DIR DLL_SYMBOL)
     set(multi_args ADDITIONAL_NED_PATHS)
-
     cmake_parse_arguments(args "${options_args}" "${single_args}" "${multi_args}" ${ARGN})
 
     if(args_UNPARSED_ARGUMENTS)
