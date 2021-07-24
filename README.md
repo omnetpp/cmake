@@ -49,9 +49,8 @@ The following is *one* of many other ways to do it.
 
     ```cmake
     # Uncomment the following if you have external dependencies like INET
-    #find_path(INET_DIRNAMESsrc/inet/package.nedDOC "INET root directory")
-
-    #import_opp_target(inet${INET_DIR}/src/Makefile)
+    #find_path(INET_DIR NAMES src/inet/package.ned DOC "INET root directory")
+    #import_opp_target(inet ${INET_DIR}/src/Makefile)
 
     # Define your library/simulation sources
     set(SOURCES
