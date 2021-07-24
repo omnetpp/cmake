@@ -41,8 +41,8 @@ The following is *one* of many other ways to do it.
 
     find_package(OmnetPP 6.0 REQUIRED)
 
-    # Import the required CMake module
-    include(OMNet)
+    # Load the CMake commands for OMNeT++
+    include(OmnetppHelpers)
     ```
 
 4.  Update your `CMakeLists.txt` with your OMNeT++ project details
