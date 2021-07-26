@@ -3,6 +3,7 @@ import argparse
 import pathlib
 import sys
 
+
 # GDB config for Microsoft C/C++ plugin
 class GdbConfig:
     def __init__(self, omnetpp, target, rundbg, args, cwd, debugger, setup_commands):
@@ -39,9 +40,11 @@ class CodeLldbConfig:
             "initCommands": []
         }
 
-        formatter = pathlib.Path(omnetpp, 'python/omnetpp/lldb/formatters/omnetpp.py')
+        formatter = pathlib.Path(
+            omnetpp, 'python/omnetpp/lldb/formatters/omnetpp.py')
         if formatter.is_file():
-            self.model['initCommands'].append("command script import {}".format(formatter.absolute()))
+            cmd = "command script import {}".format(formatter.absolute())
+            self.model['initCommands'].append(cmd)
 
     @property
     def name(self):
@@ -49,23 +52,26 @@ class CodeLldbConfig:
 
 
 def main():
-    # Reassemble OPP-Run-DBG CLI
     parser = argparse.ArgumentParser(
-        description='Add OMNeT++ debug configuration to VS-Code (to be done called by CMake-OMNet++ package).')
+        description='Add OMNeT++ debug configuration to VSCode.')
     parser.add_argument(
-        '--debug-config', type=str, help='Config to export. Valid values are GDB and CodeLLDB.')
-    parser.add_argument('--omnetpp-root', type=str, help="OMNeT++ root folder.")
-    parser.add_argument('--gdb-command', type=str, help="GDB executable.", default="gdb")
-    parser.add_argument('--setup-commands', type=str, help="JSON file with custom setup commands.", required=False)
-    parser.add_argument('launch_json', type=str, help="Location of launch.json to be updated.")
+        '--debug-config', type=str,
+        help='Config to export. Valid values are GDB and CodeLLDB.')
+    parser.add_argument(
+        '--omnetpp-root', type=str, help="OMNeT++ root folder.")
+    parser.add_argument(
+        '--gdb-command', type=str, help="GDB executable.", default="gdb")
+    parser.add_argument(
+        '--setup-commands', type=str, required=False,
+        help="JSON file with custom setup commands.")
+    parser.add_argument(
+        'launch_json', type=str,
+        help="Location of launch.json to be updated.")
 
     args = parser.parse_args()
 
     # Path to launch.json file
     launch_file = pathlib.Path(args.launch_json)
-    if not launch_file.is_file():
-        print("Cannot update {} as it is not a file".format(launch_file))
-        return
 
     # Load additional commands for the debugger if file is given and exists
     setup_commands = []
@@ -86,23 +92,30 @@ def main():
 
             config = None
             if args.debug_config == "GDB":
-                config = GdbConfig(args.omnetpp_root, target_name, target['exec'], target['args'], target['working_directory'], args.gdb_cmd, setup_commands)
+                config = GdbConfig(
+                    args.omnetpp_root, target_name, target['exec'],
+                    target['args'], target['working_directory'],
+                    args.gdb_command, setup_commands)
             elif args.debug_config == "CodeLLDB":
-                config = CodeLldbConfig(args.omnetpp_root, target_name, target['exec'], target['args'], target['working_directory'])
+                config = CodeLldbConfig(
+                    args.omnetpp_root, target_name, target['exec'],
+                    target['args'], target['working_directory'])
 
             if config:
                 configs.append(config)
 
+
     launch_settings = {}
-    with launch_file.open("r") as f:
-        try:
-            launch_settings = json.load(f)
-        except ValueError as e:
-            print("launch.json has invalid content, aborting.")
-            sys.exit(1)
+    if launch_file.is_file():
+        with launch_file.open("r") as f:
+            try:
+                launch_settings = json.load(f)
+            except ValueError:
+                print("launch.json has invalid content, aborting.")
+                sys.exit(1)
 
     # create empty configurations list if missing
-    if not 'configurations' in launch_settings:
+    if 'configurations' not in launch_settings:
         launch_settings['configurations'] = []
 
     # keep non-generated configurations
@@ -121,7 +134,7 @@ def main():
         try:
             json.dump(launch_settings, f, indent=4)
         except ValueError as e:
-            print("Updated launch.json would be invalid: {}, aborting.".format(e))
+            print("Aborting, updated launch.json would be invalid: ", e)
             sys.exit(1)
 
 
