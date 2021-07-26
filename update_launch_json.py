@@ -12,7 +12,7 @@ class GdbConfig:
             "type": "cppdbg",
             "request": "launch",
             "program": rundbg,
-            "args": args,
+            "args": self.escapeArgs(args),
             "stopAtEntry": False,
             "cwd": cwd,
             "externalConsole": False,
@@ -24,6 +24,18 @@ class GdbConfig:
     @property
     def name(self):
         return self.model['name']
+
+    def escapeArgs(self, args):
+        escaped_args = []
+        escape_next = False
+        for arg in args:
+            if escape_next:
+                escaped_args.append(arg.replace(';', '\\;'))
+                escape_next = False
+            else:
+                escaped_args.append(arg)
+                escape_next = (arg == '-n')
+        return escaped_args
 
 
 # Config for CodeLLDB extension
