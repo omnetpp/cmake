@@ -1,4 +1,3 @@
-find_package(PythonInterp 3 REQUIRED)
 include(CMakeParseArguments)
 include(GetNedFolders)
 set(_OPP_CMAKE_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
@@ -8,8 +7,6 @@ find_program(VALGRIND_COMMAND valgrind DOC "Valgrind executable")
 set(VALGRIND_FLAGS "--track-origins=yes" CACHE STRING "Flags passed to Valgrind for memcheck targets")
 set(VALGRIND_EXEC_FLAGS "-u Cmdenv" CACHE STRING "Flags passed to executable run by Valgrind")
 set(RUN_FLAGS "" CACHE STRING "Flags appended to run command (and debug)")
-set(VSCODE_DEBUG_CONFIG "GDB" CACHE STRING "Set either to GDB or CodeLLDB to export launch-settings (install CodeLLDB extension).")
-set(THIS_MODULE_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 mark_as_advanced(GDB_COMMAND VALGRIND_COMMAND)
 
 function(_get_opp_run_dependencies target output)
@@ -82,7 +79,7 @@ function(_build_opp_run_command)
 endfunction()
 
 function(add_opp_run name)
-    set(options_args VSCODE)
+    set(options_args "")
     set(one_value_args "CONFIG;DEPENDENCY;WORKING_DIRECTORY")
     set(multi_value_args "NED_FOLDERS")
     cmake_parse_arguments(args "${options_args}" "${one_value_args}" "${multi_value_args}" ${ARGN})
@@ -130,14 +127,21 @@ function(add_opp_run name)
             VERBATIM)
     endif()
 
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND args_VSCODE)
+    get_property(vscode_addon GLOBAL PROPERTY VSCODE_ADDON)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND vscode_addon)
+        # update_launch_json.py requires at least Python 3.4
+        find_package(Python3 3.4 COMPONENTS Interpreter REQUIRED)
+
+        # add build option for selecting debug configuration
+        set(VSCODE_DEBUG_CONFIG "GDB" CACHE STRING "VSCode launch configurations (GDB or CodeLLDB)")
+
         if(NOT TARGET update_launch_json)
             add_custom_target(update_launch_json ALL DEPENDS update_launch_json.stamp)
         endif()
 
         add_custom_command(
             OUTPUT update_launch_json.stamp
-            COMMAND ${PYTHON_EXECUTABLE} ${THIS_MODULE_BASE_DIR}/update_launch_json.py
+            COMMAND ${Python3_EXECUTABLE} ${_OPP_CMAKE_BASE_DIR}/update_launch_json.py
                 --gdb-command ${GDB_COMMAND}
                 --omnetpp-root ${OMNETPP_ROOT}
                 --debug-config ${VSCODE_DEBUG_CONFIG}
@@ -213,6 +217,17 @@ function(add_opp_test name)
         COMMAND ${exec} ${config} ${opp_run_args}
         WORKING_DIRECTORY ${working_directory})
 endfunction(add_opp_test)
+
+function(vscode_addon_option)
+    if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.vscode)
+        set(has_vscode_dir ON)
+    else()
+        set(has_vscode_dir OFF)
+    endif()
+
+    option(VSCODE_ADDON "Enable VSCode build add-on" ${has_vscode_dir})
+    set_property(GLOBAL PROPERTY VSCODE_ADDON ${VSCODE_ADDON})
+endfunction()
 
 function(generate_run_script)
     set(option_args "INSTALL")
