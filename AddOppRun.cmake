@@ -151,9 +151,15 @@ function(add_opp_run name)
         list(GET exec 0 _launch_exec)
         list(SUBLIST exec 1 -1 _launch_args)
         list(APPEND _launch_args ${config} ${run_flags})
-        string(REPLACE ";" " " _launch_args "${_launch_args}")
+        list(LENGTH _launch_args _launch_args_length)
+        if(_launch_args_length GREATER 0)
+            list(JOIN _launch_args "\", \"" _launch_args)
+            set(_launch_args "\"${_launch_args}\"")
+        else()
+            set(_launch_args "")
+        endif()
         file(GENERATE OUTPUT ${PROJECT_BINARY_DIR}/vscode-debug/${name}.json
-            CONTENT "{\"working_directory\": \"${working_directory}\", \"exec\": \"${_launch_exec}\", \"args\": \"${_launch_args}\"}"
+            CONTENT "{\"working_directory\": \"${working_directory}\", \"exec\": \"${_launch_exec}\", \"args\": [${_launch_args}]}"
             CONDITION "$<CONFIG:Debug>")
     endif()
 
