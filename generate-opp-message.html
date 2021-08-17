@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>GenerateOppMessage &#8212; OMNeT++/CMake  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GetNedFolders" href="get-ned-folders.html" />
+    <link rel="prev" title="FindOmnetPP" href="find-omnetpp.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="generateoppmessage">
+<h1>GenerateOppMessage<a class="headerlink" href="#generateoppmessage" title="Permalink to this headline">¶</a></h1>
+<p>This module provides the <cite>generate_opp_message</cite> function, which has the following signature.</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">generate_opp_message(</span><span class="nv">&lt;INPUT_MSG_FILE&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="no">MSG4</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="no">TARGET</span><span class="w"> </span><span class="nb">target</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="no">OUTPUT_ROOT</span><span class="w"> </span><span class="nb">directory</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="no">DIRECTORY</span><span class="w"> </span><span class="nb">directory</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="no">GEN_SOURCES</span><span class="w"> </span><span class="nb">var</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="no">GEN_INCLUDE_DIR</span><span class="w"> </span><span class="nb">var</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="no">ADDITIONAL_NED_PATHS</span><span class="w"> </span><span class="nb">path</span><span class="w"> </span><span class="p">...]</span><span class="w"></span>
+<span class="nf">)</span><span class="w"></span>
+</pre></div>
+</div>
+<dl class="command">
+<dt id="command:generate_opp_message">
+<code class="sig-name descname">generate_opp_message</code><a class="headerlink" href="#command:generate_opp_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>At least the <cite>&lt;INPUT_MSG_FILE&gt;</cite> argument must be given, which is the <em>*.msg</em> file passed to the OMNeT++ message compiler. The OMNeT++ message compiler must be known via the <cite>OMNETPP_MSGC</cite> variable, which is usually set by the <a class="reference internal" href="find-omnetpp.html"><span class="doc">FindOmnetPP</span></a>.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">MSG4</span></code></dt><dd><p>Forces the message compiler to process the input file as OMNeT++ 4.x message file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">TARGET</span></code></dt><dd><p>Add the generated sources to the given target by calling <cite>target_sources</cite>.
+The <cite>OUTPUT_ROOT</cite> directory is added as include directory to this target as well.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OUTPUT_ROOT</span></code></dt><dd><p>The root directory where the output files will be generated.
+<cite>${PROJECT_BINARY_DIR}/opp_messages</cite> is used as default directory.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DIRECTORY</span></code></dt><dd><p>Optional sub-directory relative to <cite>OUTPUT_ROOT</cite>, i.e. the given path is appended to <cite>OUTPUT_ROOT</cite>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">GEN_SOURCES</span></code></dt><dd><p>Name of an output variable which gets populated with the generated filenames.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">GEN_INCLUDE_DIR</span></code></dt><dd><p>Name of an output variable which gets populated with the include directory for using the generated messages.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ADDITIONAL_NED_PATHS</span></code></dt><dd><p>Further import paths during message compilation.
+These paths are passed on to the message compiler as <cite>-I</cite> arguments.</p>
+</dd>
+</dl>
+<p>Earlier implementations provided a <cite>clean_opp_messages</cite> macro to delete the generated sources from the source tree.
+Nowadays, message files are compiled in the build directory and CMake automatically removes generated artifacts with its <cite>clean</cite> target.
+The <cite>clean_opp_messages</cite> is thus no longer needed and has been removed.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Your cup of OMNeT++ flavoured with CMake</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=omnetpp&repo=cmake&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="add-opp-run.html">AddOppRun</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add-opp-target.html">AddOppTarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="find-omnetpp.html">FindOmnetPP</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GenerateOppMessage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get-ned-folders.html">GetNedFolders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="import-opp-target.html">ImportOppTarget</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="find-omnetpp.html" title="previous chapter">FindOmnetPP</a></li>
+      <li>Next: <a href="get-ned-folders.html" title="next chapter">GetNedFolders</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Heinz-Peter Liechtenecker, Raphael Riebl, Thor K. Høgås.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/generate-opp-message.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

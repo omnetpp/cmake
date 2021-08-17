@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>FindOmnetPP &#8212; OMNeT++/CMake  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GenerateOppMessage" href="generate-opp-message.html" />
+    <link rel="prev" title="AddOppTarget" href="add-opp-target.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="findomnetpp">
+<h1>FindOmnetPP<a class="headerlink" href="#findomnetpp" title="Permalink to this headline">¶</a></h1>
+<p>This module finds the OMNeT++ libraries and include directory.
+Simply use it by invoking <strong class="command">find_package</strong>:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">find_package(</span><span class="nb">OmnetPP</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="nb">version</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="no">EXACT</span><span class="p">]</span><span class="w">   </span><span class="c"># minimum or EXACT version, e.g. 5.6.2</span>
+<span class="w">    </span><span class="p">[</span><span class="no">REQUIRED</span><span class="p">]</span><span class="w">          </span><span class="c"># fail with error if OMNeT++ is not found</span>
+<span class="nf">)</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="section" id="result-variables">
+<h2>Result variables<a class="headerlink" href="#result-variables" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_FOUND</span></code></dt><dd><p>True if OMNeT++ is found.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_LIBRARIES</span></code></dt><dd><p>List of OMNeT++ library targets, see imported targets below.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_VERSION</span></code></dt><dd><p>OMNeT++ version number in <code class="docutils literal notranslate"><span class="pre">X.Y.Z</span></code> format.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="cache-variables">
+<h2>Cache variables<a class="headerlink" href="#cache-variables" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_ROOT</span></code></dt><dd><p>Root directory of OMNeT++.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_INCLUDE_DIR</span></code></dt><dd><p>Directory containing OMNeT++ header files, usually <code class="docutils literal notranslate"><span class="pre">OMNETPP_ROOT</span></code>/include.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_MSGC</span></code></dt><dd><p>The OMNeT++ message compiler.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_FEATURETOOL</span></code></dt><dd><p>The OMNeT++ feature tool.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_RUN</span></code></dt><dd><p>The <em>opp_run</em> executable for release runs.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_RUN_DEBUG</span></code></dt><dd><p>The <em>opp_run_dbg</em> executable for debug runs.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_RUNALL</span></code></dt><dd><p>The <em>opp_runall</em> script.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OMNETPP_&lt;X&gt;_LIBRARY_DEBUG</span></code> and <code class="docutils literal notranslate"><span class="pre">OMNETPP_&lt;X&gt;_LIBRARY_RELEASE</span></code></dt><dd><p>The debug and release build variants of each OMNeT++ library.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="imported-targets">
+<h2>Imported targets<a class="headerlink" href="#imported-targets" title="Permalink to this headline">¶</a></h2>
+<p>The following targets referring to individual OMNeT++ libraries are imported:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">OmnetPP::&lt;X&gt;</span></code></dt><dd><p>where <code class="docutils literal notranslate"><span class="pre">&lt;X&gt;</span></code> refers to one of</p>
+<ul class="simple">
+<li><p>cmdenv</p></li>
+<li><p>common</p></li>
+<li><p>envir</p></li>
+<li><p>eventlog</p></li>
+<li><p>layout</p></li>
+<li><p>main</p></li>
+<li><p>nedxml</p></li>
+<li><p>qtenv</p></li>
+<li><p>qtenv-osg</p></li>
+<li><p>scave</p></li>
+<li><p>sim</p></li>
+<li><p>tkenv</p></li>
+</ul>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OmnetPP::header</span></code></dt><dd><p>is an interface target which provides you the compile definitions and include directories
+for OMNeT++ but no actual library.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Your cup of OMNeT++ flavoured with CMake</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=omnetpp&repo=cmake&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="add-opp-run.html">AddOppRun</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add-opp-target.html">AddOppTarget</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FindOmnetPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate-opp-message.html">GenerateOppMessage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get-ned-folders.html">GetNedFolders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="import-opp-target.html">ImportOppTarget</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="add-opp-target.html" title="previous chapter">AddOppTarget</a></li>
+      <li>Next: <a href="generate-opp-message.html" title="next chapter">GenerateOppMessage</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Heinz-Peter Liechtenecker, Raphael Riebl, Thor K. Høgås.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/find-omnetpp.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
