@@ -9,7 +9,7 @@ CMake Modules for building OMNeT++ projects and integrating with you CMake suppo
 These CMake modules were originally developed against **OMNeT+ 5.X**, but should also work with **OMNeT++ 6.0** and beyond.
 
 We are currently building our :pencil: documentation website at https://omnetpp.github.io/cmake.
-Though this documentation is still work-in-progress, you may already have a look on it!
+Though this documentation is still work-in-progress, you may already have a look at it!
 
 Usage
 -----
