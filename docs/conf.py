@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'OMNeT++ CMake Module'
+project = 'OMNeT++/CMake'
 copyright = '2021, Heinz-Peter Liechtenecker, Raphael Riebl, Thor K. Høgås'
 author = 'Heinz-Peter Liechtenecker, Raphael Riebl, Thor K. Høgås'
 
@@ -46,6 +46,12 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 #
 html_theme = 'alabaster'
+html_theme_options = {
+    'description': 'Your cup of OMNeT++ flavoured with CMake',
+    'github_user': 'omnetpp',
+    'github_repo': 'cmake',
+    'logo': 'logo.png'
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

@@ -1,3 +1,12 @@
+#[==[.rst:
+AddOppRun
+---------
+
+This module provides mechanisms to run OMNeT++ simulations conveniently without relying on the OMNeT++ IDE.
+
+*The documentation of this module is still a stub!*
+#]==]
+
 include(CMakeParseArguments)
 include(GetNedFolders)
 set(_OPP_CMAKE_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
@@ -78,6 +87,11 @@ function(_build_opp_run_command)
     set(${args_OUTPUT} ${exec} PARENT_SCOPE)
 endfunction()
 
+#[==[.rst:
+.. cmake:command:: add_opp_run
+
+Add run and debug targets.
+#]==]
 function(add_opp_run name)
     set(options_args "")
     set(one_value_args "CONFIG;DEPENDENCY;WORKING_DIRECTORY")
@@ -178,6 +192,11 @@ function(add_opp_run name)
     endif()
 endfunction()
 
+#[==[.rst:
+.. cmake:command:: add_opp_test
+
+Add a smoke test target.
+#]==]
 function(add_opp_test name)
     set(one_value_args "CONFIG;RUN;SIMTIME_LIMIT;SUFFIX")
     set(multi_value_args "")
@@ -219,6 +238,12 @@ function(add_opp_test name)
         WORKING_DIRECTORY ${working_directory})
 endfunction(add_opp_test)
 
+#[==[.rst:
+.. cmake:command:: vscode_addon_option
+
+Adds a CMake cache option which allows users to toggle the Visual Studio Code add-on on and off.
+If a *\.vscode* directory exists in the project's root directory, the add-on is enabled by default then.
+#]==]
 function(vscode_addon_option)
     if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.vscode)
         set(has_vscode_dir ON)
@@ -230,6 +255,11 @@ function(vscode_addon_option)
     set_property(GLOBAL PROPERTY VSCODE_ADDON ${VSCODE_ADDON})
 endfunction()
 
+#[==[.rst:
+.. cmake:command:: generate_run_script
+
+Generates a shell script for running a simulation target.
+#]==]
 function(generate_run_script)
     set(option_args "INSTALL")
     set(one_value_args "TARGET;FILE;TEMPLATE")

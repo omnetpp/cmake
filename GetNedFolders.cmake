@@ -1,3 +1,10 @@
+#[==[.rst:
+GetNedFolders
+-------------
+
+*This documentation is still a stub!*
+#]==]
+
 function(_get_ned_folders_plumbing _target _property _base_dir _output)
     set(_folders "")
     get_target_property(_target_type ${_target} TYPE)
@@ -27,11 +34,17 @@ function(_get_ned_folders_plumbing _target _property _base_dir _output)
     set(${_output} ${_folders_abs} PARENT_SCOPE)
 endfunction()
 
+#[==[.rst:
+.. cmake:command:: get_ned_folders
+#]==]
 function(get_ned_folders _target _output)
     _get_ned_folders_plumbing(${_target} NED_FOLDERS ${CMAKE_CURRENT_SOURCE_DIR} _folders)
     set(${_output} ${_folders} PARENT_SCOPE)
 endfunction()
 
+#[==[.rst:
+.. cmake:command:: get_install_ned_folders
+#]==]
 function(get_install_ned_folders _target _output)
     _get_ned_folders_plumbing(${_target} INSTALL_NED_FOLDERS ${CMAKE_INSTALL_PREFIX} _folders)
     set(${_output} ${_folders} PARENT_SCOPE)

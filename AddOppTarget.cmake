@@ -1,3 +1,12 @@
+#[==[.rst:
+AddOppTarget
+------------
+
+*This documentation is still a stub!*
+
+.. cmake:command:: add_opp_target
+#]==]
+
 include(CMakeParseArguments)
 
 function(add_opp_target)
