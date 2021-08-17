@@ -1,5 +1,14 @@
 find_package(PythonInterp 3 REQUIRED)
 
+#[==[.rst:
+ImportOppTarget
+---------------
+
+*This documentation is still a stub!*
+
+.. cmake:command:: import_opp_target
+#]==]
+
 macro(import_opp_target _target _opp_makefile)
     # _cmake_target: generated CMake file with import target [optional argument]
     if(${ARGC} GREATER 2)

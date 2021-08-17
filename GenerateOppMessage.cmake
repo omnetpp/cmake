@@ -1,18 +1,52 @@
 include(CMakeParseArguments)
 
-# Options:
-# - MSG4: Call message compiler with --msg4
-#
-# One Value Arguments:
-# - TARGET: Optional name of the target to call target_sources and target_include_directories to add compiled sources
-# - OUTPUT_ROOT: Optional root-directory where the files will be generated. Default: ${PROJECT_BINARY_DIR}/opp_messages
-# - DIRECTORY: Optional relative path for the output-directory (Appended to OUTPUT_ROOT).
-#   Defaults to the relative path of the message file in respect to ${PROJECT_SOURCE_DIR}/src
-# - GEN_SOURCES: Optional name of the variable to populate with sources to be compiled
-# - GEN_INCLUDE_DIR: Optional name of the variable to populate with the include directory
-#
-# Mutli Value Arguments:
-# - ADDITIONAL_NED_PATHS: Optional paths to be added as search/include directories when calling the message compiler (-I Arguments)
+#[==[.rst:
+GenerateOppMessage
+------------------
+
+This module provides the `generate_opp_message` function, which has the following signature.
+
+.. code-block:: cmake
+
+    generate_opp_message(<INPUT_MSG_FILE>
+        [MSG4]
+        [TARGET target]
+        [OUTPUT_ROOT directory]
+        [DIRECTORY directory]
+        [GEN_SOURCES var]
+        [GEN_INCLUDE_DIR var]
+        [ADDITIONAL_NED_PATHS path ...]
+    )
+
+.. cmake:command:: generate_opp_message
+
+At least the `<INPUT_MSG_FILE>` argument must be given, which is the *\*.msg* file passed to the OMNeT++ message compiler. The OMNeT++ message compiler must be known via the `OMNETPP_MSGC` variable, which is usually set by the :doc:`find-omnetpp`.
+
+``MSG4``
+    Forces the message compiler to process the input file as OMNeT++ 4.x message file.
+
+``TARGET``
+    Add the generated sources to the given target by calling `target_sources`.
+    The `OUTPUT_ROOT` directory is added as include directory to this target as well.
+
+``OUTPUT_ROOT``
+    The root directory where the output files will be generated.
+    `${PROJECT_BINARY_DIR}/opp_messages` is used as default directory.
+
+``DIRECTORY``
+    Optional sub-directory relative to `OUTPUT_ROOT`, i.e. the given path is appended to `OUTPUT_ROOT`.
+
+``GEN_SOURCES``
+    Name of an output variable which gets populated with the generated filenames.
+
+``GEN_INCLUDE_DIR``
+    Name of an output variable which gets populated with the include directory for using the generated messages.
+
+``ADDITIONAL_NED_PATHS``
+    Further import paths during message compilation.
+    These paths are passed on to the message compiler as `-I` arguments.
+
+#]==]
 
 # generate sources for messages via opp_msgc
 function(generate_opp_message msg_input)
@@ -105,3 +139,9 @@ function(generate_opp_message msg_input)
         set(${args_GEN_INCLUDE_DIR} ${msg_output_root} PARENT_SCOPE)
     endif()
 endfunction()
+
+#[==[.rst:
+Earlier implementations provided a `clean_opp_messages` macro to delete the generated sources from the source tree.
+Nowadays, message files are compiled in the build directory and CMake automatically removes generated artifacts with its `clean` target.
+The `clean_opp_messages` is thus no longer needed and has been removed.
+#]==]
