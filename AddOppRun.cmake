@@ -64,11 +64,7 @@ function(_build_opp_run_command)
     endif()
 
     # select opp_run binary depending on build type
-    if(NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        set(opp_run ${OMNETPP_RUN_DEBUG})
-    else()
-        set(opp_run ${OMNETPP_RUN})
-    endif()
+    set(opp_run $<IF:$<CONFIG:Debug>,${OMNETPP_RUN_DEBUG},${OMNETPP_RUN}>)
 
     # build opp_run command depending on target type
     get_target_property(target_type ${args_TARGET} TYPE)
@@ -138,7 +134,8 @@ function(add_opp_run name)
         OPP_RUN_WORKING_DIRECTORY ${working_directory}
         OPP_RUN_NED_FOLDERS "${args_NED_FOLDERS}")
 
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND GDB_COMMAND)
+    get_property(multi_config_generator GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+    if((multi_config_generator OR CMAKE_BUILD_TYPE STREQUAL "Debug") AND GDB_COMMAND)
         add_custom_target(debug_${name}
             COMMAND ${GDB_COMMAND} --args ${exec} ${config} ${run_flags}
             WORKING_DIRECTORY ${working_directory}
